@@ -1,5 +1,8 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
+import { RouterOutlet, RouterLink, RouterLinkWithHref } from '@angular/router';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -7,6 +10,9 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      imports: [
+        RouterTestingModule.withRoutes([])
+      ]
     }).compileComponents();
   }));
 
@@ -22,10 +28,34 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('pruebas');
   });
 
-  it('should render title in a h1 tag', () => {
+  it('Debe existir un router-outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to pruebas!');
+    const app = fixture.debugElement.componentInstance;
+
+    const debugElement = fixture.debugElement.query( By.directive( RouterOutlet ) );
+
+    expect( debugElement ).not.toBeNull();
   });
+
+  it('Debe de tener un link a Medicos', () => {
+
+    const fixture = TestBed.createComponent(AppComponent);
+    const debugElements = fixture.debugElement.queryAll( By.directive( RouterLinkWithHref ) );
+
+    // console.log(debugElements);
+
+    let existe = false;
+
+    for ( const elem of debugElements ) {
+      // tslint:disable-next-line: no-string-literal
+      if ( elem.attributes[ 'routerLink' ] === '/medicos' ) {
+        existe = true;
+        break;
+      }
+    }
+
+    expect( existe ).toBeTruthy();
+
+  });
+
 });
